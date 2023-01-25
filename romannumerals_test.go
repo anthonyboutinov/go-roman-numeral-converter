@@ -73,3 +73,12 @@ func TestIntegerToRomanZero(t *testing.T) {
 		t.Fatalf(`IntegerToRoman("%v") = %v, %v, want %v`, input, got, error, want)
 	}
 }
+
+func TestIntegerToRomanTooLarge(t *testing.T) {
+	input := 3999 + 1 // The largest numeral is MMMCMXCIX (3999)
+	want := "to raise a (too large of a number) error"
+	got, error := IntegerToRoman(input)
+	if error == nil {
+		t.Fatalf(`IntegerToRoman("%v") = %v, %v, want %v`, input, got, error, want)
+	}
+}
