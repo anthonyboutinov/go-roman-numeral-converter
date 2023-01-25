@@ -11,6 +11,15 @@ func TestRomanToIntegerMeaningfulInput(t *testing.T) {
 	}
 }
 
+func TestRomanToIntegerMeaningfulInputLowerCase(t *testing.T) {
+	input := "cxxXiv"
+	want := 134
+	got, error := RomanToInteger(input)
+	if got != want || error != nil {
+		t.Fatalf(`RomanToInteger("%s") = %v, %v, want %v`, input, got, error, want)
+	}
+}
+
 func TestRomanToIntegerAtLeastOneOfEachRomanNumerals(t *testing.T) {
 	input := "MDCLXVI"
 	want := 1666
