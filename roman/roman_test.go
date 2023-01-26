@@ -65,7 +65,7 @@ func TestRomanToInt(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "Jibberish of roman symbols ICXLXXIVMD",
+			name:    "Invalid roman numeral ICXLXXIVMD",
 			roman:   "ICXLXXIVMD",
 			arabic:  0,
 			wantErr: true,
@@ -79,6 +79,42 @@ func TestRomanToInt(t *testing.T) {
 		{
 			name:    "Empty string",
 			roman:   "",
+			arabic:  0,
+			wantErr: true,
+		},
+		{
+			name:    "Invalid roman numeral IX",
+			roman:   "IX",
+			arabic:  0,
+			wantErr: true,
+		},
+		{
+			name:    "Invalid roman numeral VVI",
+			roman:   "VVI",
+			arabic:  0,
+			wantErr: true,
+		},
+		{
+			name:    "Invalid roman numeral IIV",
+			roman:   "IIV",
+			arabic:  0,
+			wantErr: true,
+		},
+		{
+			name:    "Invalid roman numeral IVX",
+			roman:   "IVX",
+			arabic:  0,
+			wantErr: true,
+		},
+		{
+			name:    "Invalid roman numeral IVVI",
+			roman:   "IVVI",
+			arabic:  0,
+			wantErr: true,
+		},
+		{
+			name:    "Invalid roman numeral VX",
+			roman:   "VX",
 			arabic:  0,
 			wantErr: true,
 		},
