@@ -13,8 +13,15 @@ type testCase struct {
 	wantErr bool
 }
 
-// Run tests for a list of test cases with a closure function
-func runTests(t *testing.T, testCases []testCase, testFunc func(testCase) (interface{}, error)) {
+type testCasePropertyName bool
+
+const (
+	_arabic = true
+	_roman  = false
+)
+
+// Run tests for a list of test cases, with a closure function, checking test results against specific property
+func runTests(t *testing.T, testCases []testCase, testFunc func(testCase) (interface{}, error), checkResultAgainstProperty testCasePropertyName) {
 	for _, test := range testCases {
 		got, error := testFunc(test)
 		if test.wantErr {
@@ -27,8 +34,11 @@ func runTests(t *testing.T, testCases []testCase, testFunc func(testCase) (inter
 				t.Errorf(`Test case '%v': unexpected error: %v`, test.name, error)
 				continue
 			}
-			if got != test.arabic {
+			if checkResultAgainstProperty == _arabic && got != test.arabic {
 				t.Errorf(`Test case '%v': expected %v, got %v`, test.name, test.arabic, got)
+			}
+			if checkResultAgainstProperty == _roman && got != test.roman {
+				t.Errorf(`Test case '%v': expected %v, got %v`, test.name, test.roman, got)
 			}
 		}
 	}
@@ -76,7 +86,7 @@ func TestRomanToInt(t *testing.T) {
 
 	runTests(t, testCases, func(elem testCase) (interface{}, error) {
 		return roman.RomanToInteger(elem.roman)
-	})
+	}, _arabic)
 }
 
 func TestIntToRoman(t *testing.T) {
@@ -85,6 +95,12 @@ func TestIntToRoman(t *testing.T) {
 			name:    "Valid number 628",
 			arabic:  628,
 			roman:   "DCXXVIII",
+			wantErr: false,
+		},
+		{
+			name:    "Valid number 139",
+			arabic:  139,
+			roman:   "CXXXIX",
 			wantErr: false,
 		},
 		{
@@ -109,6 +125,6 @@ func TestIntToRoman(t *testing.T) {
 
 	runTests(t, testCases, func(elem testCase) (interface{}, error) {
 		return roman.IntegerToRoman(elem.arabic)
-	})
+	}, _roman)
 
 }

@@ -5,25 +5,17 @@ import (
 	"strings"
 )
 
-var numerals = map[string]int{
-	"I": 1,
-	"V": 5,
-	"X": 10,
-	"L": 50,
-	"C": 100,
-	"D": 500,
-	"M": 1000,
-}
-
-var numeralsOrder = "MDCLXVI"
-
+// Holds a unit of a Roman numeral together with its integer value
 type numeral struct {
 	roman string
 	value int
 }
 
+// MARK: Roman to Integer
+
 // Checks for correct order, e.g. "I" can precede "V", but "I" cannot precede "X"
 func hasValidRankDifference(lhs numeral, rhs numeral) bool {
+	numeralsOrder := "MDCLXVI"
 	/*
 		Correct and incorrect numeral placement reference:
 				VI	XI	IV	IX
@@ -37,8 +29,20 @@ func hasValidRankDifference(lhs numeral, rhs numeral) bool {
 	return leftRank <= rightRank || leftRank-rightRank < 2
 }
 
+// A map of primitives needed to decypher the roman numerals
+var numeralPrimitives = map[string]int{
+	"I": 1,
+	"V": 5,
+	"X": 10,
+	"L": 50,
+	"C": 100,
+	"D": 500,
+	"M": 1000,
+}
+
+// Converts a single primitive Roman numeral into an integer
 func singleRomanNumeralToInteger(char string) (int, error) {
-	val, ok := numerals[char]
+	val, ok := numeralPrimitives[char]
 	if ok {
 		return val, nil
 	} else {
@@ -46,6 +50,7 @@ func singleRomanNumeralToInteger(char string) (int, error) {
 	}
 }
 
+// Converts a Roman numeral into Arabic, integer form
 func RomanToInteger(roman string) (int, error) {
 	if roman == "" {
 		return 0, fmt.Errorf("empty input string")
@@ -96,6 +101,46 @@ func RomanToInteger(roman string) (int, error) {
 	return total, nil
 }
 
-func IntegerToRoman(integer int) (string, error) {
-	return "", nil
+// MARK: Integer to Roman
+
+// Ordered list of Roman numerals, needed for quickly composing them from an integer
+var numerals = []numeral{
+	{roman: "M", value: 1000},
+	{roman: "CM", value: 900},
+	{roman: "D", value: 500},
+	{roman: "CD", value: 400},
+	{roman: "C", value: 100},
+	{roman: "XC", value: 90},
+	{roman: "L", value: 50},
+	{roman: "XL", value: 40},
+	{roman: "X", value: 10},
+	{roman: "IX", value: 9},
+	{roman: "V", value: 5},
+	{roman: "IV", value: 4},
+	{roman: "I", value: 1},
+}
+
+// Converts an integer number to a Roman numeral string
+func IntegerToRoman(number int) (string, error) {
+
+	if number < 0 {
+		return "", fmt.Errorf("cannot convert negative numbers to Roman numeral notation")
+	}
+	if number == 0 {
+		return "", fmt.Errorf("0 cannot be represented in Roman numeral notation")
+	}
+	if number > 3999 {
+		return "", fmt.Errorf("numbers greater than 3999 cannot be represented in Roman numeral notation")
+	}
+
+	var output = ""
+
+	for _, numeral := range numerals {
+		for number >= numeral.value {
+			output += numeral.roman
+			number -= numeral.value
+		}
+	}
+
+	return output, nil
 }
